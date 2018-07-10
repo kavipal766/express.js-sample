@@ -8,6 +8,8 @@ var mongoose = require('mongoose');
 var nodemailer = require('nodemailer');
 var async = require('async');
 var common = require('../../config/common');
+var cloudinary = require('cloudinary');
+
 // var supportEmailIdService = common.supportEmailIdService;
 // console.log("emailidservices"+supportEmailIdService);
 var transporter = nodemailer.createTransport({
@@ -16,6 +18,11 @@ var transporter = nodemailer.createTransport({
     user: common.supportEmailId,
     pass: common.supportEmailIdpass
   }
+});
+cloudinary.config({
+  cloud_name: common.cloud_name,
+  api_key: common.api_key,
+  api_secret: common.api_secret
 });
 
 module.exports = {
@@ -400,5 +407,28 @@ transporter.sendMail(mailOptions, function(error, info) {
     })
   }
 });
+},
+uploadimage: (req,res)=>{
+  let filePaths = req.body.filePaths;
+cloudinary.v2.uploader.upload(filePaths).then((succes)=>res.json({responseCode:200,responseMessage:"image upload successfully"+JSON.stringify(succes)})
+)
+.catch((err)=>{
+  console.log(err)
+   res.json({responseCode:400,responseMessage:"Something went wrong."});
+})
+
+},
+twilioVerify: (req,res)=>{
+  var createNewOTP = Math.floor(100000 + Math.random() * 900000);
+  console.log("otp"+createNewOTP);
+client.messages
+   .create({
+      body: 'your otp is'+createNewOTP,
+      from: '+14159410965',
+      to: req.body.number
+    })
+   .then(message => console.log("msg send"+message.sid))
+   .catch((error)=>console.log(error))
 }
+
 }

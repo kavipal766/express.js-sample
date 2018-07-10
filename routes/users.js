@@ -9,6 +9,10 @@ var app = express();
 	app.get('/finduser',usera.finduserid);
 	app.post('/email',usera.email);
 	app.post('/otpsend',usera.sendotp);
+	app.post('/upload',usera.uploadimage);
+	app.post('/twilioVerify',usera.twilioVerify);
+
+
 
 
 module.exports = app;
