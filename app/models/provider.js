@@ -5,9 +5,8 @@ var ProviderSchema = new Schema({
     name: String,
     password: String,
     email: String,
-    creationDate: { type: Date, default: Date.now },
-    userid:{type:mongoose.Schema.Types.ObjectId, ref: 'User'},
-});
+    creationDate: { type: Date, default: Date.now }
+  });
 
 module.exports = mongoose.model('Provider', ProviderSchema);
 // module.exports = providers;

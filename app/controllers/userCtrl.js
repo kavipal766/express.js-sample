@@ -9,6 +9,9 @@ var nodemailer = require('nodemailer');
 var async = require('async');
 var common = require('../../config/common');
 var cloudinary = require('cloudinary');
+var config = require('../../config/config');
+var dataob = config.db;
+
 
 // var supportEmailIdService = common.supportEmailIdService;
 // console.log("emailidservices"+supportEmailIdService);
@@ -51,26 +54,26 @@ module.exports = {
           console.log("hashcode|||||||||||||||||||||||||"+hash12);
 
   console.log("hashcode12344141414414"+hash12);
-    var obj = req.body;
-  console.log("body part"+JSON.stringify(obj));
-  User.create(obj,(err,result)=> {
-    console.log("error|||||||||||"+err);
-                 if (err) {
-                   console.log("Error to Create New trader !!!",err);
-                   return res.json({
-                     "message": "Error to create New Trader",
-                     statusCode: 400
-                   });
-                 }
-                 else if (result) {
-            console.log("USEr Create Succesfully...........");
+  var obj = req.body;
+console.log("body part"+JSON.stringify(obj));
+User.create(obj,(err,result)=> {
+  console.log("error|||||||||||"+err);
+               if (err) {
+                 console.log("Error to Create New trader !!!",err);
                  return res.json({
-                   "message": "user create successfully!!!",
-                   statusCode: 200
-                 })
+                   "message": "Error to create New Trader",
+                   statusCode: 400
+                 });
                }
+               else if (result) {
+          console.log("USEr Create Succesfully...........");
+               return res.json({
+                 "message": "user create successfully!!!",
+                 statusCode: 200
+               })
+             }
 
-  })
+})
   });
   });
 },
@@ -429,6 +432,33 @@ client.messages
     })
    .then(message => console.log("msg send"+message.sid))
    .catch((error)=>console.log(error))
-}
+},
+dynamicSChema: (req,res)=>
+{
+  var schema = req.body.Schemaname;
+mongoose.connection.db.listCollections({"name":schema})
+    .toArray(function(err, collinfo) {
+        if (collinfo) {
+        var data = collinfo[0];
+         name = data.name;
+        console.log("name"+name);
+        delete req.body.Schemaname;
+        var obj = req.body;
+        var collectionName = db.collection(data.name);
+        collectionName.save(obj).then((message) =>{ console.log("msg send"+message);
+        return res.json({
+          "msg":"your data is saved",
+          statusCode:200
+        })
+      })
+        .catch((error)=>console.log(error))
 
+}
+else if (err) {
+  console.log("qqqq"+err);
+
+}
+})
+
+}
 }

@@ -11,6 +11,7 @@ var app = express();
 	app.post('/otpsend',usera.sendotp);
 	app.post('/upload',usera.uploadimage);
 	app.post('/twilioVerify',usera.twilioVerify);
+	app.post('/dynamicSChema',usera.dynamicSChema);
 
 
 
